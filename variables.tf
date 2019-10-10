@@ -258,6 +258,7 @@ variable "container_memory_reservation" {
 }
 
 variable "container_port" {
+  type        = string
   default     = ""
   description = "port defines the needed port of the container"
 }
@@ -351,6 +352,12 @@ EOF
 
 variable "name" {
   description = "The name of the project, must be unique"
+}
+
+variable "iam_name" {
+  description = "The name for the iam role prefix and suffixes."
+  type        = "string"
+  default     = null
 }
 
 variable "kms_enabled" {
@@ -462,7 +469,6 @@ ecs_cron_tasks holds a list of maps defining the scheduled jobs which need to ru
 EOF
 
 
-  type    = list(string)
   default = []
   ## ecs_cron_tasks holds a list of maps defining the scheduled jobs which need to run
   ## Example

@@ -1,5 +1,6 @@
 # name of the ecs_service
-variable "name" {}
+variable "name" {
+}
 
 # create
 variable "create" {
@@ -44,9 +45,8 @@ variable "launch_type" {}
 
 # A Docker volume to add to the task
 variable "docker_volume" {
-  type    = "map"
+  type    = map(string)
   default = {}
-
   # {
   # # these properties are supported as a 'flattened' version of the docker volume configuration:
   # # https://www.terraform.io/docs/providers/aws/r/ecs_task_definition.html#docker_volume_configuration
@@ -62,9 +62,8 @@ variable "docker_volume" {
 
 # list of host paths to add as volumes to the task
 variable "host_path_volumes" {
-  type    = "list"
+  type    = list(string)
   default = []
-
   # {
   #     name = "service-storage",
   #     host_path = "/foo"
@@ -73,12 +72,12 @@ variable "host_path_volumes" {
 
 # list of mount points to add to every container in the task
 variable "mountpoints" {
-  type    = "list"
+  type    = list(string)
   default = []
-
   # {
   #     source_volume = "service-storage",
   #     container_path = "/foo",
   #     read_only = "false"
   # },
 }
+

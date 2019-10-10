@@ -68,7 +68,7 @@ variable "with_placement_strategy" {}
 variable "health_check_grace_period_seconds" {}
 
 variable "tags" {
-  type    = "map"
+  type    = map(string)
   default = {}
 }
 
@@ -100,3 +100,4 @@ variable "service_discovery_routing_policy" {
 variable "service_discovery_healthcheck_custom_failure_threshold" {
   default = "1"
 }
+

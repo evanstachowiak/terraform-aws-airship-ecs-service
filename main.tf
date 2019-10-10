@@ -16,7 +16,7 @@ module "iam" {
   source = "./modules/iam/"
 
   # Name
-  name = "${local.ecs_cluster_name}-${var.name}"
+  name = var.iam_name != null ? var.iam_name : "${local.ecs_cluster_name}-${var.name}"
 
   # Create defines if any resources need to be created inside the module
   create = var.create
@@ -195,7 +195,7 @@ module "container_definition" {
   container_port = var.container_port
   host_port      = var.awsvpc_enabled ? var.container_port : var.host_port
 
-  hostname = var.awsvpc_enabled == 1 ? "" : var.name
+  hostname = var.awsvpc_enabled ? null : var.name
 
   container_envvars = var.container_envvars
   container_secrets = var.container_secrets
@@ -204,7 +204,7 @@ module "container_definition" {
 
   container_docker_labels = var.container_docker_labels
 
-  mountpoints = [var.mountpoints]
+  mountpoints = var.mountpoints
 
   healthcheck = var.container_healthcheck
 
@@ -298,8 +298,8 @@ module "ecs_service" {
   name = var.name
 
   # create defines if resources are being created inside this module
-  create = var.create && false == var.is_scheduled_task
-
+//  create = var.create && ! var.is_scheduled_task
+  create = true
   cluster_id = var.ecs_cluster_id
 
   awsvpc_enabled = var.awsvpc_enabled
@@ -381,7 +381,7 @@ module "ecs_autoscaling" {
   source = "./modules/ecs_autoscaling/"
 
   # create defines if resources inside this module are being created.
-  create = var.create && false == var.is_scheduled_task && length(var.scaling_properties) > 0 ? true : false
+  create = var.create && ! var.is_scheduled_task && length(var.scaling_properties) > 0 ? true : false
 
   cluster_name = local.ecs_cluster_name
 
@@ -404,7 +404,7 @@ module "lambda_ecs_task_scheduler" {
   source = "./modules/lambda_ecs_task_scheduler/"
 
   # create defines if resources inside this module are being created.
-  create = var.create && false == var.is_scheduled_task && length(var.ecs_cron_tasks) > 0 ? true : false
+  create = var.create && ! var.is_scheduled_task && length(var.ecs_cron_tasks) > 0 ? true : false
 
   ecs_cluster_id = var.ecs_cluster_id
 
