@@ -60,6 +60,7 @@ deployment_controller_type sets the deployment type
 ECS for Rolling update, and CODE_DEPLOY for Blue/Green deployment via CodeDeploy
 EOF
 
+
   default = "ECS"
 }
 
@@ -86,7 +87,7 @@ variable "load_balancing_properties_route53_custom_name" {
 variable "load_balancing_properties_custom_listen_hosts" {
   description = "Extra hosts the ALB needs to make listener_rules for to the ECS target group"
   default     = []
-  type        = "list"
+  type        = list(string)
 }
 
 variable "load_balancing_properties_custom_listen_hosts_count" {
@@ -226,6 +227,7 @@ When the type is set to `datasource` regular terraform datasources are used to l
 Downside of datasource is that it cannot be used for bootstrapping.
 EOF
 
+
   default = "lambda"
 }
 
@@ -261,13 +263,13 @@ variable "container_port" {
 }
 
 variable "container_healthcheck" {
-  type        = "map"
+  type        = map(string)
   default     = {}
   description = "healthcheck, describes the extra HEALTHCHECK for the container"
 }
 
 variable "container_command" {
-  type        = "list"
+  type        = list(string)
   default     = [""]
   description = "container_command, describes the command for the container a a list, leaving default should run docker defined CMD"
 }
@@ -310,7 +312,9 @@ Scaling properties holds a map of multiple maps defining scaling policies and al
     # scaling_adjustment defines the amount to scale, can be a postive or negative number or percentage
     scaling_adjustment = "1"
   },]
-  EOF
+  
+EOF
+
 
   default = []
 }
@@ -319,7 +323,9 @@ variable "container_envvars" {
   description = <<EOF
 container_envvars defines extra container env vars, list of maps:
 { key = val,key2= val2}
-  EOF
+  
+EOF
+
 
   default = {}
 }
@@ -331,13 +337,14 @@ Example:
 ```hcl
 container_secrets_enabled = true
 container_secrets = {
-  DB_USER     = "${data.aws_ssm_parameter.username.arn}"
+  DB_USER     = "$${data.aws_ssm_parameter.username.arn}"
   DB_PASSWORD = "/myapp/dev/db.password"
 }
 ssm_enabled = true
 ssm_paths   = ["myapp/dev"]
 ```
 EOF
+
 
   default = {}
 }
@@ -387,10 +394,9 @@ variable "s3_rw_paths" {
 }
 
 variable "docker_volume" {
-  type        = "map"
+  type        = map(string)
   default     = {}
   description = "A Docker volume to add to the task"
-
   # {
   # # these properties are supported as a 'flattened' version of the docker volume configuration:
   # # https://www.terraform.io/docs/providers/aws/r/ecs_task_definition.html#docker_volume_configuration
@@ -405,10 +411,9 @@ variable "docker_volume" {
 }
 
 variable "host_path_volumes" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "list of host paths to add as volumes to the task"
-
   ## Example:
   # host_path_volumes = [{
   #   name = "foo",
@@ -421,10 +426,9 @@ variable "host_path_volumes" {
 }
 
 variable "mountpoints" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "list of mount points to add to every container in the task"
-
   ## Example 
   # mountpoints = [{
   #   sourceVolume = "foo",
@@ -454,11 +458,12 @@ ecs_cron_tasks holds a list of maps defining the scheduled jobs which need to ru
     command = "python vacuum_db.py"
 
   },]
-  EOF
+  
+EOF
 
-  type    = "list"
+
+  type    = list(string)
   default = []
-
   ## ecs_cron_tasks holds a list of maps defining the scheduled jobs which need to run
   ## Example
 
@@ -508,7 +513,7 @@ variable "service_discovery_properties_healthcheck_custom_failure_threshold" {
 
 variable "tags" {
   description = "A map of tags to apply to all taggable resources"
-  type        = "map"
+  type        = map(string)
   default     = {}
 }
 
@@ -519,24 +524,24 @@ variable "health_check_grace_period_seconds" {
 
 variable "repository_credentials_secret_arn" {
   description = "ARN of Docker private registry credentials stored in secrets manager"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "container_ulimit_name" {
-  type        = "string"
+  type        = string
   default     = "nofile"
   description = "ECS container definition ulimits name"
 }
 
 variable "container_ulimit_soft_limit" {
-  type        = "string"
+  type        = string
   default     = ""
   description = "ECS container definition ulimits soft limit"
 }
 
 variable "container_ulimit_hard_limit" {
-  type        = "string"
+  type        = string
   default     = ""
   description = "ECS containter definition ulimits hard limit"
 }
@@ -546,6 +551,7 @@ variable "is_scheduled_task" {
 When this is enabled, any load balancer- and autoscaling settings are ignored, and no ECS service is created. 
 Instead, a scheduled task is created using the task defintion and the 'scheduled_task_*' settings.
 EOF
+
 
   default = false
 }
@@ -566,6 +572,7 @@ variable "scheduled_task_count" {
 }
 
 variable "scheduled_task_name" {
-  description = "The name of the scheduled_task event rule. If blank, this defaults to var.name".
+  description = "The name of the scheduled_task event rule. If blank, this defaults to var.name."
   default     = ""
 }
+
