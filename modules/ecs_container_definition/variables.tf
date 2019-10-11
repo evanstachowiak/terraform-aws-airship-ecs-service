@@ -5,44 +5,53 @@
 
 variable "container_name" {
   description = "The name of the container. Up to 255 characters ([a-z], [A-Z], [0-9], -, _ allowed)."
+  type        = string
 }
 
 variable "container_image" {
   description = "The image used to start the container. Images in the Docker Hub registry available by default."
+  type        = string
 }
 
 variable "container_memory" {
   description = "The amount of memory (in MiB) to allow the container to use. This is a hard limit, if the container attempts to exceed the container_memory, the container is killed. This field is optional for Fargate launch type and the total amount of container_memory of all containers in a task will need to be lower than the task memory value."
+  type        = number
   default     = 256
 }
 
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container. If container needs to exceed this threshold, it can do so up to the set container_memory hard limit."
+  type        = number
   default     = 128
 }
 
 variable "container_port" {
   description = "The port number on the container bound to assigned host_port."
+  type        = number
   default     = 80
 }
 
 variable "container_init_process_enabled" {
   description = "Should the container be run with initProcessEnabled (--init)"
   default     = false
+  type        = bool
 }
 
 variable "host_port" {
   description = "The port number on the container instance (host) to reserve for the container_port. If using containers in a task with the awsvpc or host network mode, the hostPort can either be left blank or set to the same value as the containerPort."
+  type        = number
 }
 
 variable "protocol" {
   description = "The protocol used for the port mapping. Options: tcp or udp."
   default     = "tcp"
+  type        = string
 }
 
 variable "privileged" {
   description = "Bool. Run the container with elevated privilege."
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
 variable "healthcheck" {
@@ -52,12 +61,14 @@ variable "healthcheck" {
 
 variable "container_cpu" {
   description = "The number of cpu units to reserve for the container. This is optional for tasks using Fargate launch type and the total amount of container_cpu of all containers in a task will need to be lower than the task-level cpu value."
+  type        = number
   default     = 256
 }
 
 variable "essential" {
   description = "Determines whether all other containers in a task are stopped, if this container fails or stops for any reason. Due to how Terraform type casts booleans in json it is required to double quote this value."
-  default     = "true"
+  type        = bool
+  default     = true
 }
 
 variable "entrypoint" {
@@ -72,11 +83,13 @@ variable "container_command" {
 
 variable "working_directory" {
   description = "The working directory to run commands inside the container."
-  default     = ""
+  type        = string
+  default     = null
 }
 
 variable "container_envvars" {
   description = "The environment variables to pas to the container. This is a map"
+  type = map(string)
   default     = null
 }
 
@@ -89,16 +102,19 @@ variable "container_secrets" {
 EOF
 
 
-  default = null
+  type = map(string)
+  default = {}
 }
 
 variable "readonly_root_filesystem" {
   description = "Determines whether a container is given read-only access to its root filesystem. Due to how Terraform type casts booleans in json it is required to double quote this value."
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
 variable "log_driver" {
   description = "The log driver to use for the container. If using Fargate launch type, only supported value is awslogs."
+  type        = string
   default     = "awslogs"
 }
 
@@ -115,6 +131,7 @@ variable "mountpoints" {
 
 variable "hostname" {
   description = "The optional hostname for the container, not allowed to use with Fargate"
+  type        = string
   default     = ""
 }
 

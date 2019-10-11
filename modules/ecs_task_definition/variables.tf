@@ -1,6 +1,5 @@
 # name of the ecs_service
-variable "name" {
-}
+variable "name" {}
 
 # create
 variable "create" {

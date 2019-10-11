@@ -44,21 +44,7 @@ resource "aws_ecs_task_definition" "app" {
     }
   }
 
-//  container_definitions = var.container_definitions
-  container_definitions = jsonencode([
-//    merge({
-    {
-      name        = "test"
-      image       = "amazonlinux:2"
-      memory      = 256
-      cpu         = 256
-      essential   = true
-      entryPoint  = [""]
-      command     = ["sshd"]
-      mountPoints = var.mountpoints
-    }
-//    }, local.hostname),
-  ])
+  container_definitions = var.container_definitions
   network_mode          = var.awsvpc_enabled ? "awsvpc" : "bridge"
 
   # We need to ignore future container_definitions, and placement_constraints, as other tools take care of updating the task definition

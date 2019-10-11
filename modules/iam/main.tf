@@ -90,6 +90,13 @@ data "aws_iam_policy_document" "ssm_permissions" {
   }
 }
 
+# Add the Cloudwatch policy to the task role
+resource "aws_iam_role_policy_attachment" "cloudwatch_permissions" {
+  count      = var.create && var.cloudwatch_enabled ? 1 : 0
+  role       = aws_iam_role.ecs_tasks_role[0].id
+  policy_arn = var.cloudwatch_policy_arn
+}
+
 # Add the SSM policy to the task role
 resource "aws_iam_role_policy" "ssm_permissions" {
   count  = var.create && var.ssm_enabled ? 1 : 0

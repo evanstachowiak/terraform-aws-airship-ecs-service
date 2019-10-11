@@ -17,6 +17,17 @@ variable "fargate_enabled" {
   default = false
 }
 
+variable "cloudwatch_enabled" {
+  description = "Whether to provide access to Cloudwatch Logs."
+  default     = true
+}
+
+variable "cloudwatch_policy_arn" {
+  description = "ARN of the Cloudwatch Logs policy."
+  type        = string
+  default     = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
 variable "container_secrets_enabled" {
   description = "true, if the container needs access to SSM secrets"
   default     = false

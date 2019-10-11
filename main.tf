@@ -160,7 +160,7 @@ resource "aws_cloudwatch_log_group" "app" {
 #
 module "live_task_lookup" {
   source                       = "./modules/live_task_lookup/"
-  create                       = var.create
+  create                       = var.create && var.create_task_definition_selector
   ecs_cluster_id               = var.ecs_cluster_id
   ecs_service_name             = var.name
   container_name               = var.container_name
@@ -175,7 +175,7 @@ module "live_task_lookup" {
 module "container_definition" {
   source            = "./modules/ecs_container_definition/"
   container_name    = var.container_name
-  container_command = [var.container_command]
+  container_command = var.container_command
 
   # if var.force_bootstrap_container_image is enabled, we always take the terraform param as container_image
   # otherwise we take the image from the datasource lookup
@@ -270,7 +270,7 @@ module "ecs_task_definition_selector" {
   source = "./modules/ecs_task_definition_selector/"
 
   # Create defines if we need to create resources inside this module
-  create = var.create
+  create = var.create && var.create_task_definition_selector
 
   ecs_container_name = var.container_name
 
@@ -308,7 +308,7 @@ module "ecs_service" {
   # launch_type either EC2 or FARGATE
   launch_type = local.launch_type
 
-    selected_task_definition = module.ecs_task_definition.aws_ecs_task_definition_arn
+    selected_task_definition = var.create_task_definition_selector ? module.ecs_task_definition_selector.selected_task_definition_for_deployment : module.ecs_task_definition.aws_ecs_task_definition_arn
 //  selected_task_definition = module.ecs_task_definition_selector.selected_task_definition_for_deployment
 
   # deployment_controller_type sets the deployment type

@@ -10,6 +10,7 @@ locals {
 
 locals {
   hostname = var.hostname == null ? {} : {hostname = var.hostname}
+  secrets = length(var.container_secrets) == 0 ? {} : {secrets = var.container_secrets}
   port_mappings = {
     with_port = [
       {
@@ -36,7 +37,7 @@ locals {
     with_credentials = {
       credentialsParameter = var.repository_credentials_secret_arn
     }
-    without_credentials = {}
+    without_credentials = null
   }
 
   use_port        = var.container_port == "" ? "without_port" : "with_port"
@@ -44,8 +45,7 @@ locals {
   use_ulimits     = var.ulimit_soft_limit == "" && var.ulimit_hard_limit == "" ? "without_ulimits" : "with_ulimits"
 
   container_definitions = [
-//    merge({
-    {
+    merge({
       name                   = var.container_name
       image                  = var.container_image
       memory                 = var.container_memory
@@ -57,18 +57,10 @@ locals {
       workingDirectory       = var.working_directory
       readonlyRootFilesystem = var.readonly_root_filesystem
       dockerLabels           = local.docker_labels
-//      privileged             = var.privileged
+      privileged             = var.privileged
       environment            = var.container_envvars
-      secrets                = var.container_secrets
       mountPoints            = var.mountpoints
-            portMappings           = local.port_mappings[local.use_port]
-//      portMappings           = [
-//        {
-//          containerPort = var.container_port
-//          hostPort      = var.host_port
-//          protocol      = var.protocol
-//        }
-//      ]
+      portMappings           = local.port_mappings[local.use_port]
       healthCheck            = var.healthcheck
       repositoryCredentials  = local.repository_credentials[local.use_credentials]
       linuxParameters        = {
@@ -79,8 +71,7 @@ locals {
         logDriver = var.log_driver
         options   = var.log_options
       }
-    }
-//    }, local.hostname),
+    }, local.hostname, local.secrets),
   ]
 }
 

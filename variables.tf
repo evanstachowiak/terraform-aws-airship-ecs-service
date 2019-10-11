@@ -3,44 +3,60 @@
 
 variable "create" {
   default     = true
+  type        = bool
   description = "create is the variable used in all resources to conditionally create them"
 }
 
+variable "create_task_definition_selector" {
+  default     = true
+  type        = bool
+  description = "use task_selector to decide on task definiton deployments."
+}
+
+
 variable "ecs_cluster_id" {
   description = "The cluster to which the ECS Service will be added"
+  type        = string
 }
 
 variable "region" {
   description = "Region of the ECS Cluster"
+  type        = string
 }
 
 variable "fargate_enabled" {
   description = "With fargate_enabled the launchtype of the service will be FARGATE, otherwise EC2 ( default is false)"
+  type        = bool
   default     = false
 }
 
 variable "container_secrets_enabled" {
   description = "true, if the container uses secrets and needs a task execution role to get access to them"
+  type        = bool
   default     = false
 }
 
 variable "container_init_process_enabled" {
   description = "Should the container be run with initProcessEnabled (--init)"
+  type        = bool
   default     = false
 }
 
 variable "awsvpc_enabled" {
   default     = false
+  type        = bool
   description = "With awsvpc_enabled the network_mode for the ECS task definition will be awsvpc, defaults to bridge"
 }
 
 variable "log_retention_in_days" {
-  default     = "14"
+  default     = 14
+  type        = number
   description = "Number of days for the cloudwatch logs for the containers to be retained"
 }
 
 variable "cloudwatch_kms_key" {
   default     = ""
+  type        = string
   description = "kms_key for the cloudwatch logs"
 }
 
@@ -51,6 +67,7 @@ variable "scheduling_strategy" {
 
 variable "with_placement_strategy" {
   default     = false
+  type        = bool
   description = "Spread tasks over ECS Cluster based on AZ, Instance-id, memory"
 }
 
@@ -66,21 +83,25 @@ EOF
 
 variable "load_balancing_properties_lb_arn" {
   description = "The arn of the ALB or NLB being used"
+  type        = string
   default     = ""
 }
 
 variable "load_balancing_type" {
   default     = "none"
+  type        = string
   description = "load_balancing_type is either \"none\", \"network\",\"application\""
 }
 
 variable "load_balancing_properties_route53_record_type" {
   description = "By default we create an ALIAS to the ALB, this can be set to CNAME, or NONE to not create any records"
+  type        = string
   default     = "ALIAS"
 }
 
 variable "load_balancing_properties_route53_custom_name" {
   description = "By default we create a subdomain with using var.name, override with load_balancing_properties_route53_custom_name"
+  type        = string
   default     = ""
 }
 
@@ -92,52 +113,62 @@ variable "load_balancing_properties_custom_listen_hosts" {
 
 variable "load_balancing_properties_custom_listen_hosts_count" {
   description = "necessary count for the load_balancing_properties_custom_listen_hosts"
+  type        = number
   default     = 0
 }
 
 variable "load_balancing_properties_redirect_http_to_https" {
   description = "Redirect http to https instead of serving http"
+  type        = bool
   default     = false
 }
 
 variable "load_balancing_properties_lb_listener_arn" {
   description = "lb_listener_arn is the ALB listener arn for HTTP"
+  type        = string
   default     = ""
 }
 
 variable "load_balancing_properties_lb_listener_arn_https" {
   description = "lb_listener_arn_https is the ALB listener arn for HTTPS"
+  type        = string
   default     = ""
 }
 
 variable "load_balancing_properties_nlb_listener_port" {
   description = "nlb_listener_port is the default port for the Network Load Balancer to listen on"
-  default     = "80"
+  type        = number
+  default     = 80
 }
 
 variable "load_balancing_properties_target_group_port" {
   description = "target_group_port sets the port for the alb or nlb target group, this generally can stay 80 regardless of the service port"
-  default     = "80"
+  type        = number
+  default     = 80
 }
 
 variable "load_balancing_properties_lb_vpc_id" {
   description = "lb_vpc_id is the vpc_id for the target_group to reside in"
+  type        = string
   default     = ""
 }
 
 variable "load_balancing_properties_route53_zone_id" {
   description = "route53_zone_id is the zone to add a subdomain to"
+  type        = string
   default     = ""
 }
 
 variable "load_balancing_properties_health_uri" {
   description = "health_uri is the health uri to be checked by the ALB"
+  type        = string
   default     = "/ping"
 }
 
 variable "load_balancing_properties_health_matcher" {
   description = "health_matcher sets the expected HTTP status for the health check to be marked healthy"
-  default     = "200"
+  type        = number
+  default     = 200
 }
 
 variable "load_balancing_properties_health_port" {
@@ -147,76 +178,91 @@ variable "load_balancing_properties_health_port" {
 
 variable "load_balancing_properties_unhealthy_threshold" {
   description = "The number of consecutive successful health checks required before considering an healthy target unhealthy"
-  default     = "3"
+  type        = number
+  default     = 3
 }
 
 variable "load_balancing_properties_healthy_threshold" {
   description = "The number of consecutive successful health checks required before considering an unhealthy target healthy"
-  default     = "3"
+  type        = number
+  default     = 3
 }
 
 variable "load_balancing_properties_https_enabled" {
   description = "load_balancing_properties_https_enabled enables listener rules creation for https"
+  type        = bool
   default     = true
 }
 
 variable "load_balancing_properties_deregistration_delay" {
   description = "load_balancing_properties_deregistration_delay sets the deregistration_delay for the targetgroup"
+  type        = number
   default     = 300
 }
 
 variable "load_balancing_properties_route53_record_identifier" {
   description = "route53_record_identifier sets the A ALIAS record identifier"
+  type        = string
   default     = "identifier"
 }
 
 variable "load_balancing_properties_cognito_auth_enabled" {
   description = "Set to true when cognito authentication is used for the https listener"
+  type        = bool
   default     = false
 }
 
 variable "load_balancing_properties_cognito_user_pool_arn" {
   description = "load_balancing_properties_cognito_user_pool_arn defines the cognito user pool arn for the added cognito authentication"
+  type        = string
   default     = ""
 }
 
 variable "load_balancing_properties_cognito_user_pool_client_id" {
   description = "load_balancing_properties_cognito_user_pool_client_id defines the cognito_user_pool_client_id"
+  type        = string
   default     = ""
 }
 
 variable "load_balancing_properties_cognito_user_pool_domain" {
   description = "load_balancing_properties_cognito_user_pool_domain defines the cognito_user_pool_domain"
+  type        = string
   default     = ""
 }
 
 variable "capacity_properties_desired_capacity" {
   description = "capacity_properties_desired_capacity is the desired amount of tasks for a service, when autoscaling is used desired_capacity is only used initially"
-  default     = "2"
+  type        = number
+  default     = 2
 }
 
 variable "capacity_properties_desired_min_capacity" {
   description = "capacity_properties_desired_min_capacity is used when autoscaling is activated, it sets the minimum of tasks to be available for this service"
-  default     = "2"
+  type        = number
+  default     = 2
 }
 
 variable "capacity_properties_desired_max_capacity" {
   description = "capacity_properties_desired_max_capacity is used when autoscaling is activated, it sets the maximum of tasks to be available for this service"
-  default     = "2"
+  type        = number
+  default     = 2
 }
 
 variable "capacity_properties_deployment_maximum_percent" {
   description = "capacity_properties_deployment_maximum_percent sets the maximum deployment size of the current capacity, 200% means double the amount of current tasks"
-  default     = "200"
+  type        = number
+  default     = 200
 }
 
 variable "capacity_properties_deployment_minimum_healthy_percent" {
   description = "capacity_properties_deployment_maximum_percent sets the minimum deployment size of the current capacity, 0% means no tasks need to be running at the moment of"
-  default     = "100"
+  type        = number
+  default     = 100
 }
 
 variable "force_bootstrap_container_image" {
-  default = "false"
+  type    = bool
+  default = false
 }
 
 variable "live_task_lookup_type" {
@@ -228,24 +274,29 @@ Downside of datasource is that it cannot be used for bootstrapping.
 EOF
 
 
+  type    = string
   default = "lambda"
 }
 
 variable "bootstrap_container_image" {
   description = "The docker image location"
+  type        = string
 }
 
 variable "container_name" {
   description = "Container name"
+  type        = string
   default     = "app"
 }
 
 variable "container_cpu" {
   description = "cpu defines the needed cpu for the container"
+  type        = number
 }
 
 variable "container_memory" {
   description = "container_memory  defines the hard memory limit of the container"
+  type        = number
 }
 
 variable "container_docker_labels" {
@@ -253,30 +304,32 @@ variable "container_docker_labels" {
 }
 
 variable "container_memory_reservation" {
-  default     = ""
+  default     = 128
+  type        = number
   description = "container_memory_reservation defines the ECS Memory reservation for this service and Soft/limit"
 }
 
 variable "container_port" {
-  type        = string
-  default     = ""
+  type        = number
+  default     = 80
   description = "port defines the needed port of the container"
 }
 
 variable "container_healthcheck" {
   type        = map(string)
-  default     = {}
+  default     = null
   description = "healthcheck, describes the extra HEALTHCHECK for the container"
 }
 
 variable "container_command" {
   type        = list(string)
-  default     = [""]
+  default     = null
   description = "container_command, describes the command for the container a a list, leaving default should run docker defined CMD"
 }
 
 variable "host_port" {
-  default     = ""
+  default     = null
+  type        = number
   description = "host_port, to be filled in to have a static host port mapping for non-awsvpc ecs, defaults to dynamic port mapping"
 }
 
@@ -326,9 +379,10 @@ container_envvars defines extra container env vars, list of maps:
 { key = val,key2= val2}
   
 EOF
+  type = map(string)
 
 
-  default = {}
+  default = null
 }
 
 variable "container_secrets" {
@@ -345,6 +399,7 @@ ssm_enabled = true
 ssm_paths   = ["myapp/dev"]
 ```
 EOF
+  type = map(string)
 
 
   default = {}
@@ -356,12 +411,13 @@ variable "name" {
 
 variable "iam_name" {
   description = "The name for the iam role prefix and suffixes."
-  type        = "string"
+  type        = string
   default     = null
 }
 
 variable "kms_enabled" {
   default     = false
+  type        = bool
   description = "Whether to provide access to the supplied kms_keys. If no kms keys are passed, set this to false."
 }
 
@@ -372,6 +428,7 @@ variable "kms_keys" {
 
 variable "ssm_enabled" {
   default     = false
+  type        = bool
   description = "Whether to provide access to the supplied ssm_paths. If no ssm paths are passed, set this to false"
 }
 
@@ -434,7 +491,7 @@ variable "host_path_volumes" {
 
 variable "mountpoints" {
   type        = list(string)
-  default     = []
+  default     = null
   description = "list of mount points to add to every container in the task"
   ## Example 
   # mountpoints = [{
@@ -488,32 +545,38 @@ EOF
 }
 
 variable "service_discovery_enabled" {
-  default     = "false"
+  default     = false
+  type        = bool
   description = "service_discovery_enabled enables service discovery"
 }
 
 variable "service_discovery_properties_namespace_id" {
   default     = ""
+  type        = string
   description = "service_discovery_properties_namespace_id sets the service discovery namespace"
 }
 
 variable "service_discovery_properties_dns_ttl" {
-  default     = "60"
+  default     = 60
+  type        = number
   description = "service_discovery_properties_dns_ttl sets the service discovery dns ttl"
 }
 
 variable "service_discovery_properties_dns_type" {
   default     = "A"
+  type        = string
   description = "service_discovery_properties_dns_ttl sets the service discovery dns ttl"
 }
 
 variable "service_discovery_properties_routing_policy" {
   default     = "MULTIVALUE"
+  type        = string
   description = "The routing policy that you want to apply to all records that Route 53 creates when you register an instance and specify the service. Valid Values: MULTIVALUE, WEIGHTED"
 }
 
 variable "service_discovery_properties_healthcheck_custom_failure_threshold" {
-  default     = "1"
+  default     = 1
+  type        = number
   description = "The number of 30-second intervals that you want service discovery to wait before it changes the health status of a service instance. Maximum value of 10."
 }
 
@@ -525,6 +588,7 @@ variable "tags" {
 
 variable "health_check_grace_period_seconds" {
   description = "The amount of seconds to wait before the first health check. Only relevant for load balanced apps. Default 5 minutes"
+  type        = number
   default     = 300
 }
 
@@ -564,21 +628,25 @@ EOF
 
 variable "scheduled_task_expression" {
   description = "The scheduling expression. For example, cron(0 20 * * ? *) or rate(5 minutes)."
+  type        = string
   default     = "rate(1 hour)"
 }
 
 variable "scheduled_task_group" {
   description = "(Optional) Specifies an ECS task group for the task. The maximum length is 255 characters"
+  type        = string
   default     = "default"
 }
 
 variable "scheduled_task_count" {
   description = "The number of tasks to create based on the TaskDefinition"
+  type        = number
   default     = 1
 }
 
 variable "scheduled_task_name" {
   description = "The name of the scheduled_task event rule. If blank, this defaults to var.name."
+  type        = string
   default     = ""
 }
 
