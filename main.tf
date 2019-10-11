@@ -275,6 +275,7 @@ module "ecs_task_definition_selector" {
   ecs_container_name = var.container_name
 
   # Terraform state task definition
+  aws_ecs_task_definition_arn      = module.ecs_task_definition.aws_ecs_task_definition_arn
   aws_ecs_task_definition_family   = module.ecs_task_definition.aws_ecs_task_definition_family
   aws_ecs_task_definition_revision = module.ecs_task_definition.aws_ecs_task_definition_revision
 
@@ -307,7 +308,8 @@ module "ecs_service" {
   # launch_type either EC2 or FARGATE
   launch_type = local.launch_type
 
-  selected_task_definition = module.ecs_task_definition_selector.selected_task_definition_for_deployment
+    selected_task_definition = module.ecs_task_definition.aws_ecs_task_definition_arn
+//  selected_task_definition = module.ecs_task_definition_selector.selected_task_definition_for_deployment
 
   # deployment_controller_type sets the deployment type
   # ECS for Rolling update, and CODE_DEPLOY for Blue/Green deployment via CodeDeploy
