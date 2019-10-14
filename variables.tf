@@ -379,7 +379,7 @@ container_envvars defines extra container env vars, list of maps:
 { key = val,key2= val2}
   
 EOF
-  type = map(string)
+  type        = map(string)
 
 
   default = null
@@ -399,7 +399,7 @@ ssm_enabled = true
 ssm_paths   = ["myapp/dev"]
 ```
 EOF
-  type = map(string)
+  type        = map(string)
 
 
   default = {}

@@ -89,7 +89,7 @@ variable "working_directory" {
 
 variable "container_envvars" {
   description = "The environment variables to pas to the container. This is a map"
-  type = map(string)
+  type        = map(string)
   default     = null
 }
 
@@ -102,7 +102,7 @@ variable "container_secrets" {
 EOF
 
 
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 

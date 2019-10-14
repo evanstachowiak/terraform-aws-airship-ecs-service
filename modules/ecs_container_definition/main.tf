@@ -9,8 +9,8 @@ locals {
 }
 
 locals {
-  hostname = var.hostname == null ? {} : {hostname = var.hostname}
-  secrets = length(var.container_secrets) == 0 ? {} : {secrets = var.container_secrets}
+  hostname = var.hostname == null ? {} : { hostname = var.hostname }
+  secrets  = length(var.container_secrets) == 0 ? {} : { secrets = var.container_secrets }
   port_mappings = {
     with_port = [
       {
@@ -63,11 +63,11 @@ locals {
       portMappings           = local.port_mappings[local.use_port]
       healthCheck            = var.healthcheck
       repositoryCredentials  = local.repository_credentials[local.use_credentials]
-      linuxParameters        = {
+      linuxParameters = {
         initProcessEnabled = var.container_init_process_enabled ? true : false
       }
-      ulimits                = local.ulimits[local.use_ulimits]
-      logConfiguration       = {
+      ulimits = local.ulimits[local.use_ulimits]
+      logConfiguration = {
         logDriver = var.log_driver
         options   = var.log_options
       }

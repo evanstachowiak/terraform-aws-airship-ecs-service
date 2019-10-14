@@ -299,8 +299,8 @@ module "ecs_service" {
   name = var.name
 
   # create defines if resources are being created inside this module
-//  create = var.create && ! var.is_scheduled_task
-  create = true
+  //  create = var.create && ! var.is_scheduled_task
+  create     = true
   cluster_id = var.ecs_cluster_id
 
   awsvpc_enabled = var.awsvpc_enabled
@@ -308,8 +308,8 @@ module "ecs_service" {
   # launch_type either EC2 or FARGATE
   launch_type = local.launch_type
 
-    selected_task_definition = var.create_task_definition_selector ? module.ecs_task_definition_selector.selected_task_definition_for_deployment : module.ecs_task_definition.aws_ecs_task_definition_arn
-//  selected_task_definition = module.ecs_task_definition_selector.selected_task_definition_for_deployment
+  selected_task_definition = var.create_task_definition_selector ? module.ecs_task_definition_selector.selected_task_definition_for_deployment : module.ecs_task_definition.aws_ecs_task_definition_arn
+  //  selected_task_definition = module.ecs_task_definition_selector.selected_task_definition_for_deployment
 
   # deployment_controller_type sets the deployment type
   # ECS for Rolling update, and CODE_DEPLOY for Blue/Green deployment via CodeDeploy
